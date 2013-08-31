@@ -10,6 +10,6 @@
 
 function pyrBand(pyr, pind, band)
 
-res = reshape( pyr[pyrBandIndices[pind,band]], pind[band,1], pind[band,2] )
+res = reshape( pyr[pyrBandIndices(pind,band)], convert(Int32,pind[band,1]), convert(Int32,pind[band,2]) )
 
 end

@@ -18,19 +18,18 @@ function steer2HarmMtx(harmonics, angles, evenoroddStr)
 ### Optional Parameters:
 
 # Make HARMONICS a row vector
-#harmonics = harmonics[:];
+#harmonics = harmonics[:]
 
-numh = 2*size(harmonics,2) - any(harmonics == 0)
+numh = 2*length(harmonics) - any(harmonics == 0)
 
 #angles = angles[:]
 
 ##=================================================================
 
-
   if isequal(evenoroddStr,"even")
-    evenorodd = 0;
-  elseif strcmp(evenoroddStr,"odd")
-    evenorodd = 1;
+    evenorodd = 0
+  elseif isequal(evenoroddStr,"odd")
+    evenorodd = 1
   else
     error("EVEN_OR_ODD should be the string  even or odd")
   end
@@ -45,7 +44,7 @@ for h = harmonics
   if h == 0
     imtx[:,col] = ones(length(angles))
     col += 1
-  elseif evenorodd
+  elseif evenorodd == 1
     imtx[:,col] = sin(args)
     imtx[:,col+1] = -cos(args)
     col += 2

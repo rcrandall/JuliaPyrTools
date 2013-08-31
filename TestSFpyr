@@ -1,0 +1,11 @@
+
+require("buildSFpyr")
+require("reconSFpyr")
+
+
+A = 255*rand(256,256)
+
+
+println("Not working with NOR > 0!")
+(pyr,pind,steer,harm) = buildSFpyr(A,1,3)
+res = reconSFpyr(pyr,pind)

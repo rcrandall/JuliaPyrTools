@@ -77,7 +77,7 @@ else
   harmonics = [0:(nbands-1)/2]*2
 end
 
-steermtx = steer2HarmMtx(harmonics, pi*[0:nbands-1]/nbands, "even")
+steermtx = steer2HarmMtx(harmonics, pi*[0:(nbands-1)]/nbands, "even")
 
 #-----------------------------------------------------------------
 

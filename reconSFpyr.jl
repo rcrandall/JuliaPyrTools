@@ -74,8 +74,8 @@ end
 dims = pind[1,:]
 ctr = ceil((dims+0.5)/2)
 
-xtmp = [1:dims[2]-ctr[2]]./(dims[2]/2)
-ytmp = [1:dims[1]-ctr[1]]./(dims[1]/2) 
+xtmp = [(1:dims[2])-ctr[2]]./(dims[2]/2)
+ytmp = [(1:dims[1])-ctr[1]]./(dims[1]/2) 
 
 # Check this RJC
 angle = [atan2(y,x) for x = xtmp, y = ytmp]
@@ -101,14 +101,14 @@ else
       log_rad, Xrcos, Yrcos, angle, nbands, levs, bands)
 end
 
-lo0mask = pointOp(log_rad, YIrcos, Xrcos[1], Xrcos[2]-Xrcos[1], 0)
+lo0mask = pointOp(log_rad, YIrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
 resdft = resdft .* lo0mask
 
 ## residual highpass subband
 if any(levs .== 0)
-  hi0mask = pointOp(log_rad, Yrcos, Xrcos[1], Xrcos[2]-Xrcos[1], 0)
+  hi0mask = pointOp(log_rad, Yrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
 
-  hidft = fftshift(fft(reshape(pyr[1:prod(pind[1,:])],pind[1,:])));	
+  hidft = fftshift(fft(reshape(pyr[1:prod(pind[1,:])],convert(Int32,pind[1,1]),convert(Int32,pind[1,2]))));	
   #hidft = fftshift(fft(subMtx(pyr, pind[1,:])))
 
   resdft = resdft + hidft .* hi0mask
