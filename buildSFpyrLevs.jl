@@ -9,8 +9,9 @@
 
 require("pointOp.jl")
 
-function buildSFpyrLevs(lodft,log_radIn,Xrcos,Yrcos,angle,ht,nbands)
+function buildSFpyrLevs(lodft,log_radIn,Xrcos,Yrcos,angle,ht,nbandsIn)
 
+nbands = convert(Int64,nbandsIn)
 if ht <= 0
 
   lo0 = ifft(ifftshift(lodft))
@@ -26,7 +27,7 @@ else
 
   lutsize = 1024
   Xcosn = pi*[-(2*lutsize+1):(lutsize+1)]/lutsize  # [-2*pi:pi]
-  order = nbands-1
+  order = convert(Int64,nbands-1)
   ## divide by sqrt(sum_(n=0)^(N-1)  cos(pi*n/N)^(2(N-1)) )
   ## Thanks to Patrick Teo for writing this out :)
   aconst = (exp2(2*order))*(factorial(order)^2)/(nbands*factorial(2*order))

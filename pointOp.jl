@@ -24,15 +24,11 @@ function pointOp(im,lut,origin,increment)
 yi = Grid.InterpGrid(lut, Grid.BCnearest, Grid.InterpLinear)
 
 res = map(x -> yi[x],(im-origin)/increment + 1.0)
-#res = zeros(size(im))
-
-#for i = 1:length(res)
-
-#	res[i] = yi[(im[i]-origin)/increment+1]
-#end
 
 end
 
+
+# ----------------------------------------------------------------
 # Original Matlab code: 
 
 #function res = pointOp(im, lut, origin, increment, warnings)
@@ -45,3 +41,4 @@ end
 #res = reshape(interp1(X, Y, im(:), 'linear'),size(im));
 
 #end
+# ----------------------------------------------------------------

@@ -10,13 +10,18 @@ require("pointOp")
 require("pyrBand") 
 require("pyrBandIndices")
 
-function reconSFpyrLevs(pyr,pind,log_radIn,Xrcos,Yrcos,angle,nbands,levs,bands)
+function reconSFpyrLevs(pyr,pind,log_radIn,Xrcos,Yrcos,angle,nbandsIn,levs,bands)
+
+nbands = convert(Int64,nbandsIn)
 
 lo_ind = nbands+1
+
 dims = pind[1,:]
 ctr = ceil((dims+0.5)/2)
 
-log_rad = log_radIn + 1
+#log_rad = log_radIn + 1
+log_rad = log_radIn
+Xrcos = Xrcos - log2(2)
 
 if any(levs .> 1)
 
@@ -37,24 +42,23 @@ if any(levs .> 1)
 
   YIrcos = sqrt(abs(1.0 - Yrcos.^2))
   lomask = pointOp(nlog_rad, YIrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
-dtmp = (convert(Int32,round(dims[1])),convert(Int32,round(dims[2])))
-resdft = zeros(Complex{Float64},dtmp)
- resdft[lostart[1]:loend[1],lostart[2]:loend[2]] = nresdft.*complex(lomask)
+  dtmp = (convert(Int32,round(dims[1])),convert(Int32,round(dims[2])))
+  resdft = zeros(Complex{Float64},dtmp)
+  resdft[lostart[1]:loend[1],lostart[2]:loend[2]] = nresdft.*complex(lomask)
 
 else
 
   resdft = zeros(dims[1],dims[2])
 
 end
-
 	
 if any(levs .== 1)
 
   lutsize = 1024
   Xcosn = pi*[-(2*lutsize+1):(lutsize+1)]/lutsize  # [-2*pi:pi]
-  order = nbands-1
+  order = convert(Int64,nbands-1)
   ## divide by sqrt(sum_(n=0)^(N-1)  cos(pi*n/N)^(2(N-1)) )
-  aconst = (exp2(2*order))*(factorial(order)^2)/(nbands*factorial(2*order))
+  aconst = (2^(2*order))*(factorial(order)^2)/(nbands*factorial(2*order))
   Ycosn = sqrt(aconst) * (cos(Xcosn)).^order
   himask = pointOp(log_rad, Yrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
 
@@ -69,7 +73,6 @@ if any(levs .== 1)
     ind = ind + prod(dims)
   end
 end
-
 return resdft
 
 end

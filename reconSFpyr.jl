@@ -52,7 +52,7 @@ nbands = spyrNumBands(pind)
 
 maxLev =  1+spyrHt(pind)
 if isequal(levs,"all")
-  levs = [0:maxLev]'
+  levs = 0:maxLev
 #else
 #  if (any(levs > maxLev) | any(levs < 0))
 #    error(sprintf('Level numbers must be in the range [0, #d].', maxLev));
@@ -61,7 +61,7 @@ if isequal(levs,"all")
 end
 
 if isequal(bands,"all")
-  bands = [1:nbands]'
+  bands = 1:nbands
 #else
 #  if (any(bands < 1) | any(bands > nbands))
 #    error(sprintf('Band numbers must be in the range [1,3].', nbands));
@@ -77,12 +77,11 @@ ctr = ceil((dims+0.5)/2)
 xtmp = [(1:dims[2])-ctr[2]]./(dims[2]/2)
 ytmp = [(1:dims[1])-ctr[1]]./(dims[1]/2) 
 
-# Check this RJC
-angle = [atan2(y,x) for x = xtmp, y = ytmp]
+angle = [atan2(y,x) for y = ytmp, x = xtmp]
 log_rad = [sqrt(x.^2 + y.^2) for x = xtmp, y = ytmp]
 
 log_rad[ctr[1],ctr[2]] =  log_rad[ctr[1],ctr[2]-1]
-log_rad  = log2(log_rad)
+log_rad = log2(log_rad)
 
 ## Radial transition function (a raised cosine in log-frequency):
 (Xrcos,Yrcos) = rcosFn(twidth,(-twidth/2),[0 1])
@@ -104,6 +103,9 @@ end
 lo0mask = pointOp(log_rad, YIrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
 resdft = resdft .* lo0mask
 
+
+
+
 ## residual highpass subband
 if any(levs .== 0)
   hi0mask = pointOp(log_rad, Yrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
@@ -111,7 +113,7 @@ if any(levs .== 0)
   hidft = fftshift(fft(reshape(pyr[1:prod(pind[1,:])],convert(Int32,pind[1,1]),convert(Int32,pind[1,2]))));	
   #hidft = fftshift(fft(subMtx(pyr, pind[1,:])))
 
-  resdft = resdft + hidft .* hi0mask
+  resdft = resdft + hidft .* complex(hi0mask)
 end
  
 res = real(ifft(ifftshift(resdft)))

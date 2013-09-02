@@ -81,18 +81,17 @@ steermtx = steer2HarmMtx(harmonics, pi*[0:(nbands-1)]/nbands, "even")
 
 #-----------------------------------------------------------------
 
-dims = size(im)
-ctr = ceil(([dims...]+0.5)/2)
+dims = [size(im)...]
+ctr = ceil((dims+0.5)/2)
 
 xtmp = ([1:dims[2]]-ctr[2])./(dims[2]/2)
 ytmp = ([1:dims[1]]-ctr[1])./(dims[1]/2)
 
-angle = [atan2(x,y) for x = xtmp, y = ytmp]
+angle = [atan2(y,x) for y = ytmp, x = xtmp]
 log_rad = [sqrt(x.^2 + y.^2) for x = xtmp, y = ytmp]
 
 #angle = atan2(yramp,xramp)
 #log_rad = sqrt(xramp.^2 + yramp.^2)
-
 
 log_rad[ctr[1],ctr[2]] =  log_rad[ctr[2],ctr[2]-1]
 log_rad  = log2(log_rad)
