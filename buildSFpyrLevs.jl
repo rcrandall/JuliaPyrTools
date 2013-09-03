@@ -9,9 +9,8 @@
 
 require("pointOp.jl")
 
-function buildSFpyrLevs(lodft,log_radIn,Xrcos,Yrcos,angle,ht,nbandsIn)
+function buildSFpyrLevs(lodft,log_radIn,Xrcos,Yrcos,angle,ht,nbands)
 
-nbands = convert(Int64,nbandsIn)
 if ht <= 0
 
   lo0 = ifft(ifftshift(lodft))
@@ -27,10 +26,10 @@ else
 
   lutsize = 1024
   Xcosn = pi*[-(2*lutsize+1):(lutsize+1)]/lutsize  # [-2*pi:pi]
-  order = convert(Int64,nbands-1)
+  order = nbands-1
   ## divide by sqrt(sum_(n=0)^(N-1)  cos(pi*n/N)^(2(N-1)) )
   ## Thanks to Patrick Teo for writing this out :)
-  aconst = (exp2(2*order))*(factorial(order)^2)/(nbands*factorial(2*order))
+  aconst = (exp2(2*order))*(factorial(BigInt(order))^2)/(nbands*factorial(BigInt(2*order)))
   Ycosn = sqrt(aconst) * (cos(Xcosn)).^order
   himask = pointOp(log_rad, Yrcos, Xrcos[1], Xrcos[2]-Xrcos[1])
 
